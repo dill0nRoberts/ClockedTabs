@@ -10,7 +10,7 @@ function tabTimes(tabId)
 	this.createTime = new Date();
 	this.elapsedTime = 0;
 	this.lastActiveTime = undefined;
-};
+}
 
 
 // init() gets all tabs and puts them into _tabTimes
@@ -37,10 +37,10 @@ function timestampTabCreation(tab)
 
 function timestampTabActivated(activeInfo)
 {
-	if(_currentTabId!=undefined)
+	if(_currentTabId!==undefined)
 	{
 		var oldTab = _tabTimes.get(activeInfo.tabId);
-		oldTab.elapsedTime += (Date.now()/60000 - currentActivateTime.getTime()/60000);
+		oldTab.elapsedTime += (Date.now()/60000 - _currentActivateTime.getTime()/60000);
 		_tabTimes.set(activeInfo.tabId, oldTab);
 	}
 	_currentTabId = activeInfo.tabId;
@@ -60,7 +60,7 @@ function removeTab(tabId, removeInfo)
 
 function getTabTimes(tabTime, tabID)
 {
-	return "Tab " + tabID.toString() + " \n" 
+	return "Tab " + tabID.toString() + "\n"
 	+ "\t time active: " + tabTime.elapsedTime.toString() + "\n"
 	+ "\t time created: " + tabTime.createTime.toTimeString + "\n";
 }
@@ -80,7 +80,7 @@ function onPopup(request, sender, sendResponse)
 
 // initialize all tabs into _tabTimes
 
-chrome.tabs.query(init)
+chrome.tabs.query(init);
 
 
 // check for tab switches, creation, and deletion. Creation does not imply a tab switch.
