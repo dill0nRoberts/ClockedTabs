@@ -4,6 +4,8 @@ var _tabTimes = new Map();
 var _currentTabId = undefined;
 var _currentActivateTime = undefined;
 
+var _js_tabTimes = "";
+
 function tabTimes(tabId)
 {
 	this.tabId = tabId;
@@ -13,14 +15,17 @@ function tabTimes(tabId)
 }
 
 
-// init() gets all tabs and puts them into _tabTimes
+// init(result) gets all tabs not in _tabTimes in result and puts them into _tabTimes
 
 function init(result)
 {
 	var k;
 	for(k = 0; k < result.length; k++)
 	{
-		if(result[k].id)
+		if(!_tabTimes.has(result[k].id))
+		{
+			timestampTabCreation(result[k]);
+		}
 	}
 }
 
@@ -29,7 +34,7 @@ function init(result)
 
 function timestampTabCreation(tab)
 {
-	_tabTimes.set(tab.tabId, new tabTimes(tab.tabId));
+	_tabTimes.set(tab.id, new tabTimes(tab.id));
 }
 
 
@@ -58,11 +63,11 @@ function removeTab(tabId, removeInfo)
 
 // getTabTimes(item, key) returns a string containing the
 
-function getTabTimes(tabTime, tabID)
+function getTabTimes(tabTime, tabID, times)
 {
-	return "Tab " + tabID.toString() + "\n"
+	_js_tabTimes = "Tab " + tabID.toString() + "\n"
 	+ "\t time active: " + tabTime.elapsedTime.toString() + "\n"
-	+ "\t time created: " + tabTime.createTime.toTimeString + "\n";
+	+ "\t time created: " + tabTime.createTime.toString() + "\n";
 }
 
 
@@ -72,15 +77,15 @@ function onPopup(request, sender, sendResponse)
 {
 	if(request.times=="tabTimes")
 	{
-		var js_tabTimes = "";
-		js_tabTimes = js_tabTimes.concat(_tabTimes.forEach(getTabTimes));
-		sendResponse(js_tabTimes);
+		_js_tabTimes = "";
+		_tabTimes.forEach(getTabTimes);
+		sendResponse(_js_tabTimes);
 	}
 }
 
 // initialize all tabs into _tabTimes
 
-chrome.tabs.query(init);
+chrome.tabs.query({windowType: "normal"}, init);
 
 
 // check for tab switches, creation, and deletion. Creation does not imply a tab switch.
@@ -90,6 +95,6 @@ chrome.tabs.onRemoved.addListener(removeTab);
 chrome.tabs.onActivated.addListener(timestampTabActivated);
 
 
-// listen for requests for tabTimes from popup for debugger
+// listen for requests for tabTimes from popup
 
 chrome.runtime.onMessage.addListener(onPopup);
