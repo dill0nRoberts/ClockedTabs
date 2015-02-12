@@ -15,6 +15,15 @@ function tabTimes(tabId)
 }
 
 
+
+// timestampTabCreation(tab) records the time of creation of tab into creationTimes
+
+function timestampTabCreation(tab)
+{
+	_tabTimes.set(tab.id, new tabTimes(tab.id));
+}
+
+
 // init(result) gets all tabs not in _tabTimes in result and puts them into _tabTimes
 
 function init(result)
@@ -28,15 +37,6 @@ function init(result)
 		}
 	}
 }
-
-
-// timestampTabCreation(tab) records the time of creation of tab into creationTimes
-
-function timestampTabCreation(tab)
-{
-	_tabTimes.set(tab.id, new tabTimes(tab.id));
-}
-
 
 // timestampTabActivated(activeInfo) records the time the old tab was active for and sets the activation time for the current tab.
 
@@ -72,9 +72,12 @@ function removeTab(tabId, removeInfo)
 
 function getTabTimes(tabTime, tabID, times)
 {
-	_js_tabTimes = _js_tabTimes.concat("Tab " + tabID.toString() + "\n"
-	+ "\t time active: " + tabTime.elapsedTime.toString() + "\n"
-	+ "\t time created: " + tabTime.createTime.toString() + "\n");
+	if(tabID!==undefined)
+	{
+		_js_tabTimes = _js_tabTimes.concat("Tab " + tabID.toString() + "\n"
+		+ "\t time active: " + tabTime.elapsedTime.toString() + "\n"
+		+ "\t time created: " + tabTime.createTime.toString() + "\n");	
+	}
 }
 
 

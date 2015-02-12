@@ -1,7 +1,13 @@
 var tabText = "";
-chrome.runtime.sendMessage({times: "tabTimes"}, 
+
+function main()
+{
+	chrome.runtime.sendMessage({times: "tabTimes"}, 
 	function(response)
 	{
-		tabText = tabText.concat(response._js_tabTimes);
+		tabText = tabText.concat(response);
 	});
-alert(tabText);
+	document.getElementById("stupidDiv").innerHTML = tabText;
+}
+
+window.onload = main;
