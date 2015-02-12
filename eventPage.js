@@ -44,9 +44,16 @@ function timestampTabActivated(activeInfo)
 {
 	if(_currentTabId!==undefined)
 	{
-		var oldTab = _tabTimes.get(activeInfo.tabId);
-		oldTab.elapsedTime += (Date.now()/60000 - _currentActivateTime.getTime()/60000);
-		_tabTimes.set(activeInfo.tabId, oldTab);
+		if(_tabTimes.has(activeInfo.tabId))
+		{
+			var oldTab = _tabTimes.get(activeInfo.tabId);
+			oldTab.elapsedTime += (Date.now()/60000 - _currentActivateTime.getTime()/60000);
+			_tabTimes.set(activeInfo.tabId, oldTab);
+		}
+		else
+		{
+			timestampTabCreation(activeInfo.tabId);
+		}
 	}
 	_currentTabId = activeInfo.tabId;
 	_currentActivateTime = new Date();
@@ -65,9 +72,9 @@ function removeTab(tabId, removeInfo)
 
 function getTabTimes(tabTime, tabID, times)
 {
-	_js_tabTimes = "Tab " + tabID.toString() + "\n"
+	_js_tabTimes = _js_tabTimes.concat("Tab " + tabID.toString() + "\n"
 	+ "\t time active: " + tabTime.elapsedTime.toString() + "\n"
-	+ "\t time created: " + tabTime.createTime.toString() + "\n";
+	+ "\t time created: " + tabTime.createTime.toString() + "\n");
 }
 
 
