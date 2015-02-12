@@ -7,7 +7,7 @@ function main()
 	{
 		tabText = tabText.concat(response);
 	});
-	document.getElementById("stupidDiv").innerHTML = tabText;
+	document.getElementById("stupidDiv").innerText = tabText;
 }
 
-window.onload = main;
+window.setTimeout(main, 3000);
