@@ -1,26 +1,34 @@
 var _closedTimes = new Map();
 var _tabTimes = new Map();
 
-var _currentTabId = undefined;
-var _currentActivateTime = undefined;
+var _currentTabId = undefined; // the tabId for the current tab
+var _currentActivateTime = undefined; // the time the current tab was activated
 
 var _js_tabTimes = "";
 
-function tabTimes(tabId)
+function tabTimes(tabId, title, URL)
 {
+	this.name = title;
 	this.tabId = tabId;
+	this.URL = URL;
 	this.createTime = new Date();
 	this.elapsedTime = 0;
-	this.lastActiveTime = undefined;
+	this.lastActiveTime = undefined; // creation doesn't require activation
 }
 
+// _start(tab) initializes this event page to set the current 
+
+function start(tab)
+{
+	
+}
 
 
 // timestampTabCreation(tab) records the time of creation of tab into creationTimes
 
 function timestampTabCreation(tab)
 {
-	_tabTimes.set(tab.id, new tabTimes(tab.id));
+	_tabTimes.set(tab.id, new tabTimes(tab.id, tab.title, tab.URL));
 }
 
 
@@ -68,7 +76,8 @@ function removeTab(tabId, removeInfo)
 }
 
 
-// getTabTimes(item, key) returns a string containing the
+// getTabTimes(item, key) returns a string containing the open duration and open times of
+// _js_tabTimes
 
 function getTabTimes(tabTime, tabID, times)
 {
@@ -96,6 +105,7 @@ function onPopup(request, sender, sendResponse)
 // initialize all tabs into _tabTimes
 
 chrome.tabs.query({windowType: "normal"}, init);
+chrome.tabs.getCurrent(_start);
 
 
 // check for tab switches, creation, and deletion. Creation does not imply a tab switch.
